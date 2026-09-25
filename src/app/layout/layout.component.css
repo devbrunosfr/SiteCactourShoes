@@ -303,17 +303,13 @@
 
 footer {
   display:flex;
-  justify-content:space-between;
+  justify-content:center;
   align-items:center;
   height:76px;
   padding:0 40px;
   color:#ffffff4d;
   font-size:11px;
   border-top:1px solid #ffffff12;
-}
-
-footer .logo {
-  cursor:default;
 }
 
 .toast {
