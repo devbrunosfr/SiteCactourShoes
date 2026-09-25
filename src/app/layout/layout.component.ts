@@ -59,4 +59,3 @@ export class LayoutComponent {
     this.shell.toast('Você saiu da sua conta.');
   }
 }
-

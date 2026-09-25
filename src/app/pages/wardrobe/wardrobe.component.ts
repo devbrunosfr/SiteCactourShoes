@@ -112,7 +112,6 @@ export class WardrobeComponent implements AfterViewInit, OnDestroy {
 
   wizardSelections: Record<string, WizardOption> = this.state.selections;
 
-  /** A opção já escolhida na etapa atual (ainda pode não existir escolha, por isso a checagem fica aqui e não no template). */
   isChosen(option: WizardOption): boolean {
     return this.wizardSelections[this.wizardStep.id]?.id === option.id;
   }

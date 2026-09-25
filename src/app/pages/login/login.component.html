@@ -76,14 +76,14 @@
                    [attr.minlength]="passwordRange.min" [attr.maxlength]="passwordRange.max"
                    [attr.aria-invalid]="form.controls.senha.touched && form.controls.senha.invalid"
                    aria-describedby="senha-status">
-            <!-- Olho: a senha começa oculta e só aparece quando a pessoa clica -->
+            
             <button type="button" class="toggle-password" (click)="showPassword = !showPassword" [attr.aria-pressed]="showPassword"
                     aria-controls="senha" [attr.aria-label]="(showPassword ? 'login.hidePassword' : 'login.showPassword') | t"
                     [title]="(showPassword ? 'login.hidePassword' : 'login.showPassword') | t">
               <senso-icon [name]="showPassword ? 'eye-off' : 'eye'" [size]="20" />
             </button>
           </div>
-          <!-- Aviso ao vivo do tamanho mínimo: aparece enquanto a pessoa digita -->
+          
           <p id="senha-status" class="pw-status" aria-live="polite"
              [class.ok]="form.controls.senha.value && !passwordMissing"
              [class.field-error]="form.controls.senha.touched && form.controls.senha.invalid">
@@ -137,7 +137,6 @@
 
       <p class="divider"><span>{{ 'login.or' | t }}</span></p>
 
-      <!-- Login social (simulado: o projeto não tem back-end para OAuth) -->
       <div class="social" role="group" [attr.aria-label]="'login.socialGroup' | t">
         @for (p of providers; track p.id) {
           <button type="button" class="social-btn" [disabled]="loading" (click)="social(p.id, p.name)"

@@ -16,7 +16,6 @@ import { TranslatePipe } from '../../shared/t.pipe';
 type Mode = 'entrar' | 'criar';
 type SocialProvider = Provider;
 
-/** Páginas das ferramentas: todas exigem login (authGuard). */
 const TOOL_ROUTES = ['/comparar', '/alertas-preco', '/tamanho-ideal', '/radar-preco', '/durabilidade'];
 
 @Component({
@@ -47,9 +46,9 @@ export class LoginComponent implements OnInit {
   mode: Mode = 'entrar';
   loading = false;
   showPassword = false;
-  /** Chave de tradução da mensagem de erro geral. */
+  
   errorKey = '';
-  /** Chave da mensagem que explica por que o login foi pedido (returnUrl do authGuard). */
+  
   context: { key: string } | null = null;
 
   readonly form = this.fb.nonNullable.group({
@@ -61,7 +60,7 @@ export class LoginComponent implements OnInit {
   });
 
   ngOnInit(): void {
-    // Quem já está logado nem chega aqui: o guestGuard redireciona.
+    
     if (this.route.snapshot.queryParamMap.get('modo') === 'criar') {
       this.setMode('criar');
     }
@@ -76,12 +75,10 @@ export class LoginComponent implements OnInit {
     return '/';
   }
 
-  /** Quantos caracteres faltam para o mínimo da senha (0 = ok). */
   get passwordMissing(): number {
     return Math.max(0, PASSWORD_MIN - this.form.controls.senha.value.length);
   }
 
-  /** Mensagem do e-mail: só aparece depois que a pessoa sai do campo (ou tenta enviar) com algo errado. */
   get emailErrorKey(): string {
     const email = this.form.controls.email;
     if (!email.touched || email.valid) return '';
@@ -148,12 +145,10 @@ export class LoginComponent implements OnInit {
     }
   }
 
-  /** Login social simulado (não há OAuth de verdade: a API cria uma conta de demonstração). */
   async social(provider: SocialProvider, name: string): Promise<void> {
     if (this.loading) return;
     this.errorKey = '';
 
-    // Criar conta exige o aceite dos Termos/LGPD — vale também para o login social.
     if (this.mode === 'criar' && !this.form.controls.termos.value) {
       this.form.controls.termos.markAsTouched();
       document.getElementById('termos')?.focus();
@@ -175,7 +170,7 @@ export class LoginComponent implements OnInit {
       this.finish(user, false, true);
     } catch (error) {
       if (error instanceof AuthError && error.code === 'termsRequired') {
-        // Primeiro acesso com esse provedor: é uma criação de conta, então pede o aceite.
+        
         this.setMode('criar');
         this.form.controls.termos.markAsTouched();
       }
@@ -189,7 +184,6 @@ export class LoginComponent implements OnInit {
     setTimeout(() => document.getElementById(`tab-${mode}`)?.focus());
   }
 
-  /** "Esqueci a senha": pede o e-mail num pop-up e confirma o envio (simulado). */
   async forgotPassword(): Promise<void> {
     const email = this.form.controls.email;
     const result = await this.dialog.open({
@@ -217,7 +211,7 @@ export class LoginComponent implements OnInit {
   }
 
   private finish(user: AuthUser, created: boolean, silent = false): void {
-    // Conta nova já recebeu o pop-up de boas-vindas; login comum ganha um aviso rápido.
+    
     if (!silent && !created) {
       this.shell.toast(this.i18n.t('login.welcomeBack', { name: firstName(user) }));
     }

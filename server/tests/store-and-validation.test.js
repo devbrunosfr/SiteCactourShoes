@@ -73,4 +73,3 @@ test("segredo JWT é gerado uma vez e reaproveitado", () => {
     assert.equal(config.getJwtSecret(), first);
     assert.ok(fs.existsSync(path.join(config.DATA_DIR, ".jwt-secret")));
 });
-

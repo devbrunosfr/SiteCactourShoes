@@ -2,7 +2,6 @@ import { ChangeDetectionStrategy, Component, Input, inject } from '@angular/core
 import { I18nService, Lang } from '../services/i18n.service';
 import { TranslatePipe } from './t.pipe';
 
-/** Alterna entre português (Brasil) e inglês. */
 @Component({
   selector: 'senso-lang-switch',
   standalone: true,
@@ -33,6 +32,6 @@ import { TranslatePipe } from './t.pipe';
 export class LangSwitchComponent {
   readonly i18n = inject(I18nService);
   readonly langs: Lang[] = ['pt', 'en'];
-  /** Versão para fundo claro. */
+  
   @Input() light = false;
 }

@@ -69,7 +69,6 @@ const forgotLimiter = createLimiter({
     message: "Muitos pedidos de redefinição. Aguarde alguns minutos e tente novamente."
 });
 
-// Contas de demonstração do login social simulado.
 const SOCIAL_DEMO = {
     google: { nome: "Cliente Google", email: "cliente.demo@gmail.com" },
     microsoft: { nome: "Cliente Microsoft", email: "cliente.demo@outlook.com" },
@@ -163,7 +162,7 @@ app.post("/api/auth/login", loginLimiter, async (req, res) => {
         }
 
         const user = users.findByEmail(value.email);
-        // Conta de login social não tem senha: compara com o hash falso, como se o e-mail não existisse.
+        
         const passwordMatches = await bcrypt.compare(value.senha, user && user.senhaHash ? user.senhaHash : DUMMY_HASH);
 
         if (!user || !user.senhaHash || !passwordMatches) {
@@ -188,8 +187,6 @@ app.post("/api/auth/login", loginLimiter, async (req, res) => {
     }
 });
 
-// Login social SIMULADO: cria (ou reaproveita) uma conta de demonstração do provedor escolhido.
-// Não há OAuth de verdade — por isso só existe quando ENABLE_SOCIAL_DEMO está ligado (padrão: fora de produção).
 if (config.ENABLE_SOCIAL_DEMO) {
     app.post("/api/auth/social", loginLimiter, (req, res) => {
         try {
@@ -234,8 +231,6 @@ if (config.ENABLE_SOCIAL_DEMO) {
     });
 }
 
-// "Esqueci a senha": não há servidor de e-mail, então só simula o envio.
-// A resposta é sempre a mesma, exista ou não uma conta com o e-mail informado.
 app.post("/api/auth/forgot", forgotLimiter, (req, res) => {
     const { error, code } = validateForgot(req.body);
 
@@ -276,4 +271,3 @@ if (require.main === module) {
 }
 
 module.exports = app;
-

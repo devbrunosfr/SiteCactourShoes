@@ -34,10 +34,7 @@ module.exports = {
     JWT_EXPIRES_IN: process.env.JWT_EXPIRES_IN || "7d",
     BCRYPT_ROUNDS: 10,
 
-    // Login social SIMULADO (contas de demonstração). Fica ligado em desenvolvimento e desligado em produção,
-    // a menos que ENABLE_SOCIAL_DEMO=true; não há OAuth de verdade por trás dele.
     ENABLE_SOCIAL_DEMO: process.env.ENABLE_SOCIAL_DEMO ? process.env.ENABLE_SOCIAL_DEMO === "true" : !IS_PRODUCTION,
 
     getJwtSecret: loadJwtSecret
 };
-

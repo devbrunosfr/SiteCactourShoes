@@ -1,6 +1,5 @@
 import { Dictionary } from './pt';
 
-/** English dictionary — same keys as pt.ts (TypeScript checks it). */
 export const EN: Dictionary = {
   common: {
     ok: 'Got it',

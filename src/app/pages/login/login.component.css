@@ -1,7 +1,6 @@
-/* Links sem sublinhado/cor padrão do navegador (o site de origem fazia isso no styles.css global) */
+
 a { color: inherit; text-decoration: none; }
 
-/* Foco visível nos campos (mesmo contorno lima do resto do site) */
 input:focus-visible { outline: 2px solid var(--lime); outline-offset: 3px; }
 
 .login-page {
@@ -11,7 +10,6 @@ input:focus-visible { outline: 2px solid var(--lime); outline-offset: 3px; }
   background: var(--ink);
 }
 
-/* ---------- Painel da marca ---------- */
 .brand-panel {
   position: relative;
   overflow: hidden;
@@ -47,7 +45,6 @@ input:focus-visible { outline: 2px solid var(--lime); outline-offset: 3px; }
 .brand-copy li { display: flex; gap: 10px; align-items: center; }
 .brand-copy senso-icon { color: var(--lime); }
 
-/* ---------- Formulário ---------- */
 .form-panel {
   display: flex;
   align-items: center;
@@ -88,7 +85,6 @@ input:focus-visible { outline: 2px solid var(--lime); outline-offset: 3px; }
   background: var(--lime); color: var(--lime-ink);
 }
 
-/* Alternador Entrar / Criar conta: trilho com "pílula" que desliza até a aba ativa */
 .mode-switch {
   position: relative;
   display: grid;
@@ -244,7 +240,6 @@ form { display: flex; flex-direction: column; gap: 18px; }
 .meter span { display: block; height: 100%; background: #d98e04; transition: width .2s, background .2s; }
 .pw-status.ok + .meter span { background: #3d8a18; }
 
-/* Manter conectado: interruptor */
 .remember { display: flex; align-items: center; gap: 12px; cursor: pointer; }
 .remember input { position: absolute; opacity: 0; width: 1px; height: 1px; }
 .switch {

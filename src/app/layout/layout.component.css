@@ -398,7 +398,6 @@ footer .logo {
   background:#ffffff1a;
 }
 
-/* barra superior compacta: cabem todas as opções ao lado do logo */
 .top-nav > button {
   font-size:13px;
   padding:9px 10px;
@@ -509,4 +508,3 @@ footer .logo {
     display:none;
   }
 }
-

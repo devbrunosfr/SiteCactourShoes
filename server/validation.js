@@ -1,6 +1,5 @@
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 
-// Mesmos limites da tela de login (src/app/auth/auth.service.ts).
 const NAME_MIN = 2;
 const NAME_MAX = 50;
 const PASSWORD_MIN = 6;
@@ -12,7 +11,6 @@ function text(value) {
     return typeof value === "string" ? value : "";
 }
 
-// Todo erro devolve `code` (o Angular traduz pela chave login.errors.<code>) e `error` (mensagem em texto).
 function invalid(error, code = "invalidData") {
     return { error, code };
 }

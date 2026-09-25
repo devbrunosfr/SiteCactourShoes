@@ -169,4 +169,3 @@ export function pickHighlights(ranked: { shoe: Shoe; score: Score }[]) {
   const bold = rest2.filter(r => r.score.total >= 40).slice().sort((a, b) => b.shoe.boldness - a.shoe.boldness)[0] ?? rest2[0] ?? null;
   return { best, value, bold };
 }
-

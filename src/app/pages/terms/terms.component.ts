@@ -2,7 +2,6 @@ import { Component, inject } from '@angular/core';
 import { I18nService } from '../../services/i18n.service';
 import { TranslatePipe } from '../../shared/t.pipe';
 
-/** /termos — Termos de Uso e Política de Privacidade (LGPD). Modelo para o projeto acadêmico. */
 @Component({
   selector: 'senso-terms',
   standalone: true,
@@ -56,7 +55,6 @@ import { TranslatePipe } from '../../shared/t.pipe';
 export class TermsComponent {
   readonly i18n = inject(I18nService);
 
-  /** Data de referência do documento — atualize quando o texto mudar. */
   get updated(): string {
     return this.i18n.date('2026-09-24T12:00:00');
   }

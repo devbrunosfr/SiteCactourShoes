@@ -100,4 +100,3 @@ export class ShoeArtComponent {
     return `M62,${y} l16,10 M74,${y - 4} l16,10 M86,${y + 2} l16,10`;
   }
 }
-

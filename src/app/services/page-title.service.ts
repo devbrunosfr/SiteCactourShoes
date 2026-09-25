@@ -3,10 +3,6 @@ import { Title } from '@angular/platform-browser';
 import { RouterStateSnapshot, TitleStrategy } from '@angular/router';
 import { I18nService, Params } from './i18n.service';
 
-/**
- * Títulos da aba traduzidos. Nas rotas com tradução (login, termos), `title` guarda a CHAVE do
- * dicionário (ex.: 'titles.login'). Nas demais rotas o `title` é um texto normal e é usado como está.
- */
 @Injectable({ providedIn: 'root' })
 export class PageTitleService extends TitleStrategy {
   private readonly title = inject(Title);
@@ -15,7 +11,7 @@ export class PageTitleService extends TitleStrategy {
 
   constructor() {
     super();
-    // Reaplica o título quando o idioma muda.
+    
     effect(() => {
       this.i18n.lang();
       this.apply();
@@ -37,7 +33,7 @@ export class PageTitleService extends TitleStrategy {
 
     const { key, params } = this.current;
     const text = this.i18n.t(key, params);
-    // Sem tradução no dicionário, `t` devolve a própria chave: é um título comum, então vai como está.
+    
     this.title.setTitle(text === key ? key : `${text} — CactourShoes`);
   }
 }

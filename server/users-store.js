@@ -42,7 +42,7 @@ function create({ nome, email, senhaHash, provider = "email", acceptedTermsAt = 
         id: crypto.randomUUID(),
         nome,
         email,
-        // Contas de login social não têm senha.
+        
         ...(senhaHash ? { senhaHash } : {}),
         provider,
         acceptedTermsAt,
@@ -59,4 +59,3 @@ function toPublic(user) {
 }
 
 module.exports = { findByEmail, findById, create, toPublic };
-

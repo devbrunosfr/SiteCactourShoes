@@ -10,8 +10,7 @@ import { WardrobeComponent } from './pages/wardrobe/wardrobe.component';
 import { TermsComponent } from './pages/terms/terms.component';
 
 export const routes: Routes = [
-  // Tela cheia, fora do layout. Quem já está logado é redirecionado pelo guestGuard.
-  // Em `title` vai a chave do dicionário (src/app/i18n); o PageTitleService traduz.
+  
   { path: 'entrar', component: LoginComponent, canActivate: [guestGuard], title: 'titles.login' },
   {
     path: '', component: LayoutComponent,

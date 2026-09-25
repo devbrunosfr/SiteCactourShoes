@@ -76,7 +76,7 @@ const stores = (p: number) => [
 ];
 
 export const CATALOG: Shoe[] = [
-  // Antigo "Nexus 02" -> New Balance 2002R
+  
   {
     id: 'new-balance-2002r', brand: 'New Balance', name: '2002R', colorway: 'Cinza/Verde-limão', kind: 'tenis',
     volume: 9, boldness: 6, styles: ['streetwear', 'casual'], palette: 'neutras', occasions: ['dia', 'festa'],
@@ -93,7 +93,6 @@ export const CATALOG: Shoe[] = [
     stores: stores(649.9)
   },
 
-  // Antigo "Onda Chunky" -> New Balance 530
   {
     id: 'new-balance-530', brand: 'New Balance', name: '530', colorway: 'Branco', kind: 'tenis',
     volume: 10, boldness: 9, styles: ['streetwear', 'custom'], palette: 'neutras', occasions: ['dia', 'festa'],
@@ -110,7 +109,6 @@ export const CATALOG: Shoe[] = [
     stores: stores(759.9)
   },
 
-  // Antigo "Vortex Runner" -> Nike Air Max Plus (TN)
   {
     id: 'nike-air-max-plus', brand: 'Nike', name: 'Air Max Plus (TN)', colorway: 'Grafite', kind: 'tenis',
     volume: 8, boldness: 8, styles: ['sport', 'streetwear'], palette: 'vibrantes', occasions: ['esporte', 'dia'],
@@ -127,7 +125,6 @@ export const CATALOG: Shoe[] = [
     stores: stores(899.9)
   },
 
-  // Antigo "Terra Cargo" -> Timberland 6-Inch Premium Boot
   {
     id: 'timberland-6-inch', brand: 'Timberland', name: '6-Inch Premium Boot', colorway: 'Preto', kind: 'bota',
     volume: 8, boldness: 5, styles: ['streetwear', 'casual'], palette: 'neutras', occasions: ['dia', 'festa'],
@@ -144,7 +141,6 @@ export const CATALOG: Shoe[] = [
     stores: stores(549.9)
   },
 
-  // Antigo "Trail Mono" -> New Balance 9060
   {
     id: 'new-balance-9060', brand: 'New Balance', name: '9060', colorway: 'Sea Salt (Areia)', kind: 'tenis',
     volume: 6, boldness: 4, styles: ['casual', 'sport', 'custom'], palette: 'terrosas', occasions: ['dia', 'esporte'],
@@ -161,7 +157,6 @@ export const CATALOG: Shoe[] = [
     stores: stores(329.9)
   },
 
-  // Antigo "Court Classic" -> Puma Court Star Vintage
   {
     id: 'puma-court-star-vintage', brand: 'Puma', name: 'Court Star Vintage', colorway: 'Off-white', kind: 'tenis',
     volume: 4, boldness: 2, styles: ['casual', 'formal'], palette: 'neutras', occasions: ['dia', 'trabalho'],
@@ -178,7 +173,6 @@ export const CATALOG: Shoe[] = [
     stores: stores(289.9)
   },
 
-  // Antigo "Derby Solo" -> Democrata (Derby de couro)
   {
     id: 'democrata-derby', brand: 'Democrata', name: 'Derby Anatomic', colorway: 'Café', kind: 'sapato',
     volume: 3, boldness: 1, styles: ['formal'], palette: 'terrosas', occasions: ['trabalho', 'festa'],

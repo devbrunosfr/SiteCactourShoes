@@ -4,7 +4,6 @@ export type IconName =
   | 'lock' | 'arrow-up-right' | 'arrow-right' | 'back' | 'bag' | 'check' | 'ruler'
   | 'menu' | 'close' | 'chevron-down' | 'qr' | 'plus' | 'trash' | 'user' | 'edit' | 'card' | 'star' | 'eye' | 'eye-off';
 
-/** Ícones de traço em SVG inline (herdam a cor do texto). Decorativos por padrão. */
 @Component({
   selector: 'senso-icon',
   standalone: true,
@@ -43,6 +42,6 @@ export class IconComponent {
   @Input({ required: true }) name!: IconName;
   @Input() size = 18;
   @Input() stroke = 2;
-  /** Quando informado, o ícone é anunciado por leitores de tela. */
+  
   @Input() label = '';
 }

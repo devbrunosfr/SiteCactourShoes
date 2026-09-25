@@ -1,8 +1,4 @@
-/**
- * Dicionário em português (idioma padrão) da tela de login, do pop-up e dos Termos.
- * en.ts precisa ter as mesmas chaves (o TypeScript acusa se faltar alguma).
- * Parâmetros entre chaves, ex.: {name}, são preenchidos pelo pipe `t`.
- */
+
 export const PT = {
   common: {
     ok: 'Entendi',
@@ -128,5 +124,4 @@ export const PT = {
 
 type Widen<T> = T extends string ? string : T extends readonly (infer U)[] ? Widen<U>[] : { [K in keyof T]: Widen<T[K]> };
 
-/** Formato que o dicionário em inglês precisa seguir. */
 export type Dictionary = Widen<typeof PT>;

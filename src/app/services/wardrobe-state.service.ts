@@ -31,4 +31,3 @@ export class WardrobeStateService {
     this.lockPhase = 'locked';
   }
 }
-

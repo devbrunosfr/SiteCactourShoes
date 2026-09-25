@@ -16,7 +16,6 @@ interface AuthResponse {
   user: AuthUser;
 }
 
-/** Cada código tem a mensagem correspondente em login.errors.* (src/app/i18n). */
 export type AuthErrorCode =
   | 'invalidCredentials' | 'emailTaken' | 'termsRequired' | 'invalidData' | 'tooManyRequests' | 'network' | 'generic';
 
@@ -30,22 +29,17 @@ export class AuthError extends Error {
   }
 }
 
-/** E-mail no formato nome@dominio.com (aceita também .com.br). */
 export const EMAIL_PATTERN = /^[a-z0-9._%+-]+@[a-z0-9-]+(\.[a-z0-9-]+)*\.com(\.br)?$/i;
 
 export const PASSWORD_MIN = 6;
-/** Limite de caracteres do campo de nome. */
+
 export const NAME_MAX = 50;
-/** Limite de caracteres dos campos de login: senha e e-mail. */
+
 export const PASSWORD_MAX = 30;
 export const EMAIL_MAX = 30;
 
 const STORAGE_KEY = 'cactour.auth';
 
-/**
- * Autenticação com a API da pasta server/ (JWT).
- * "Manter conectado" guarda a sessão no localStorage; sem ele, no sessionStorage (acaba ao fechar o navegador).
- */
 @Injectable({ providedIn: 'root' })
 export class AuthService {
   private readonly http = inject(HttpClient);
@@ -86,16 +80,11 @@ export class AuthService {
     return this.startSession(response, remember);
   }
 
-  /**
-   * Login social SIMULADO: não há OAuth de verdade com Google, Microsoft ou Apple.
-   * A API cria (ou reaproveita) uma conta de demonstração do provedor escolhido.
-   */
   async socialLogin(provider: Provider, acceptedTerms: boolean, remember = false): Promise<AuthUser> {
     const response = await this.post<AuthResponse>('/auth/social', { provider, acceptedTerms });
     return this.startSession(response, remember);
   }
 
-  /** "Esqueci a senha" — sem servidor de e-mail, a API só simula o envio. Nunca revela se o e-mail existe. */
   async requestPasswordReset(email: string): Promise<void> {
     await this.post<unknown>('/auth/forgot', { email: email.trim() });
   }
@@ -144,7 +133,7 @@ export class AuthService {
     try {
       (this.remember ? this.local() : this.session())?.setItem(STORAGE_KEY, JSON.stringify({ token: this.token, user: this.user }));
     } catch {
-      /* armazenamento bloqueado: a sessão vale só até recarregar a página */
+      
     }
   }
 
@@ -190,7 +179,6 @@ export class AuthService {
   }
 }
 
-/** Traduz a resposta da API num AuthError (a API devolve `code` junto com `message`). */
 function toAuthError(error: unknown): AuthError {
   if (error instanceof AuthError) return error;
 

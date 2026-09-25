@@ -133,7 +133,7 @@ export class DialogComponent {
   }
 
   onCancel(event: Event): void {
-    // Esc: fecha como "cancelar" (em aviso de um botão, equivale a OK).
+    
     event.preventDefault();
     this.service.close({ confirmed: !this.d?.cancelLabel });
   }

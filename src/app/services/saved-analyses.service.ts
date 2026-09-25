@@ -36,7 +36,7 @@ export class SavedAnalysesService {
   }
 
   private persist(): void {
-    try { localStorage.setItem(STORE_KEY, JSON.stringify(this.list)); } catch { /* ignore */ }
+    try { localStorage.setItem(STORE_KEY, JSON.stringify(this.list)); } catch {  }
   }
 
   private load(): SavedAnalysis[] {
