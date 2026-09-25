@@ -1,0 +1,27 @@
+<section id="overview" class="hero section-dark" aria-labelledby="home-title">
+  <div class="hero-copy">
+    <label>● PLATAFORMA INTELIGENTE DE CALÇADOS</label>
+    <h1 id="home-title">O calçado certo começa no que você <span>já usa.</span></h1>
+    <p>Monte seu guarda-roupa, descubra seu estilo e encontre o próximo par que faz sentido — para você, para o seu look e para o seu bolso.</p>
+    <div class="hero-actions">
+      <button type="button" class="lime-btn" (click)="startWardrobe()">Montar meu estilo <b>↗</b></button>
+      <div class="how-it-works" (click)="$event.stopPropagation()">
+        <button type="button" class="ghost-btn" [class.active]="howItWorksOpen" [attr.aria-expanded]="howItWorksOpen" (click)="toggleHowItWorks()">ⓘ Como funciona</button>
+        @if (howItWorksOpen) {
+          <div class="how-it-works-bubble" role="dialog" aria-label="Como funciona">
+            <strong>Como funciona</strong>
+            <p>A CactourShoes é uma plataforma que indica o tênis ideal para o seu estilo — sem virar mais um catálogo genérico.</p>
+            <ol>
+              <li>Monte seu <b>guarda-roupa</b>: escolha gênero, estilo, camiseta e calça no passo a passo.</li>
+              <li>Errou ou quer trocar? Clique no <b>X</b> ao lado da escolha no painel "Seu guarda-roupa" para refazer só aquela etapa, ou em "limpar filtros" para recomeçar tudo.</li>
+              <li>Com as 4 etapas prontas, veja o seu <b>match</b>: o tênis recomendado com base no que você já usa.</li>
+            </ol>
+          </div>
+        }
+      </div>
+    </div>
+  </div>
+  <div class="hero-image">
+    <video #heroVideo src="assets/S.mp4" autoplay loop muted [muted]="true" [defaultMuted]="true" playsinline preload="auto" (loadedmetadata)="playHeroVideo($event)"></video>
+  </div>
+</section>

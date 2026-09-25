@@ -1,0 +1,152 @@
+<div class="login-page">
+  <section class="brand-panel">
+    <img src="assets/img/hero.jpg" alt="" class="bg">
+    <span class="stitch" aria-hidden="true"></span>
+    <a routerLink="/" class="logo" [attr.aria-label]="'nav.home' | t"><senso-logo /></a>
+    <div class="brand-copy">
+      <h1>{{ 'login.brandTitle' | t }}</h1>
+      <ul>
+        @for (i of [0, 1, 2]; track i) {
+          <li><senso-icon name="check" [size]="18" [stroke]="2.4" />{{ 'login.perks.' + i | t }}</li>
+        }
+      </ul>
+    </div>
+  </section>
+
+  <section class="form-panel">
+    <div class="form-wrap">
+      <div class="top-row">
+        <a class="back" [routerLink]="backLink"><senso-icon name="back" [size]="16" />{{ 'login.back' | t }}</a>
+        <senso-lang-switch [light]="true" />
+      </div>
+
+      @if (context) {
+        <div class="context" role="status">
+          <span class="context-icon"><senso-icon name="lock" [size]="16" [stroke]="2.2" /></span>
+          <span>{{ context.key | t }}</span>
+        </div>
+      }
+
+      <div class="mode-switch" role="tablist" [attr.aria-label]="'login.modeLabel' | t" [class.second]="mode === 'criar'"
+           (keydown.arrowright)="setMode('criar'); focusTab('criar')" (keydown.arrowleft)="setMode('entrar'); focusTab('entrar')">
+        <span class="thumb" aria-hidden="true"></span>
+        <button type="button" role="tab" id="tab-entrar" aria-controls="auth-form" [attr.aria-selected]="mode === 'entrar'"
+                [attr.tabindex]="mode === 'entrar' ? 0 : -1" [class.active]="mode === 'entrar'" (click)="setMode('entrar')">
+          <senso-icon name="user" [size]="16" />{{ 'login.tabLogin' | t }}
+        </button>
+        <button type="button" role="tab" id="tab-criar" aria-controls="auth-form" [attr.aria-selected]="mode === 'criar'"
+                [attr.tabindex]="mode === 'criar' ? 0 : -1" [class.active]="mode === 'criar'" (click)="setMode('criar')">
+          <senso-icon name="plus" [size]="16" />{{ 'login.tabSignup' | t }}
+        </button>
+      </div>
+
+      <h2>{{ (mode === 'entrar' ? 'login.titleLogin' : 'login.titleSignup') | t }}</h2>
+
+      <form id="auth-form" role="tabpanel" [attr.aria-labelledby]="'tab-' + mode" [formGroup]="form" (ngSubmit)="submit()" novalidate>
+        @if (mode === 'criar') {
+          <div class="field">
+            <label for="nome">{{ 'login.name' | t }} <span class="char-count" aria-hidden="true">{{ form.controls.nome.value.length }}/{{ nameMax }}</span></label>
+            <input id="nome" class="input" type="text" formControlName="nome" autocomplete="name" [attr.maxlength]="nameMax"
+                   [class.invalid]="form.controls.nome.touched && form.controls.nome.invalid"
+                   [attr.aria-invalid]="form.controls.nome.touched && form.controls.nome.invalid"
+                   aria-describedby="nome-erro">
+            @if (form.controls.nome.touched && form.controls.nome.invalid) {
+              <p class="field-error" id="nome-erro">{{ 'login.nameError' | t }}</p>
+            }
+          </div>
+        }
+
+        <div class="field">
+          <label for="email">{{ 'login.email' | t }}</label>
+          <input id="email" class="input" type="email" formControlName="email" autocomplete="email" inputmode="email" [attr.maxlength]="emailMax"
+                 [class.invalid]="!!emailErrorKey" [attr.aria-invalid]="!!emailErrorKey" aria-describedby="email-erro">
+          @if (emailErrorKey) { <p class="field-error" id="email-erro">{{ emailErrorKey | t }}</p> }
+        </div>
+
+        <div class="field">
+          <div class="label-row">
+            <label for="senha">{{ 'login.password' | t }}</label>
+            @if (mode === 'entrar') {
+              <button type="button" class="link-btn" (click)="forgotPassword()">{{ 'login.forgot' | t }}</button>
+            }
+          </div>
+          <div class="password-row" [class.invalid]="form.controls.senha.touched && form.controls.senha.invalid">
+            <input id="senha" [type]="showPassword ? 'text' : 'password'" formControlName="senha"
+                   [attr.autocomplete]="mode === 'criar' ? 'new-password' : 'current-password'"
+                   [attr.minlength]="passwordRange.min" [attr.maxlength]="passwordRange.max"
+                   [attr.aria-invalid]="form.controls.senha.touched && form.controls.senha.invalid"
+                   aria-describedby="senha-status">
+            <!-- Olho: a senha começa oculta e só aparece quando a pessoa clica -->
+            <button type="button" class="toggle-password" (click)="showPassword = !showPassword" [attr.aria-pressed]="showPassword"
+                    aria-controls="senha" [attr.aria-label]="(showPassword ? 'login.hidePassword' : 'login.showPassword') | t"
+                    [title]="(showPassword ? 'login.hidePassword' : 'login.showPassword') | t">
+              <senso-icon [name]="showPassword ? 'eye-off' : 'eye'" [size]="20" />
+            </button>
+          </div>
+          <!-- Aviso ao vivo do tamanho mínimo: aparece enquanto a pessoa digita -->
+          <p id="senha-status" class="pw-status" aria-live="polite"
+             [class.ok]="form.controls.senha.value && !passwordMissing"
+             [class.field-error]="form.controls.senha.touched && form.controls.senha.invalid">
+            @if (form.controls.senha.value && passwordMissing) {
+              {{ 'login.passwordShort' | t: { min: passwordRange.min, n: passwordMissing } }}
+            } @else if (form.controls.senha.value && mode === 'criar') {
+              <senso-icon name="check" [size]="14" [stroke]="2.6" /> {{ 'login.passwordEnough' | t }}
+            } @else if (form.controls.senha.touched && form.controls.senha.invalid) {
+              {{ (mode === 'criar' ? 'login.passwordErrorSignup' : 'login.passwordErrorLogin') | t: passwordRange }}
+            } @else if (mode === 'criar') {
+              <span class="neutral">{{ 'login.passwordHint' | t: passwordRange }}</span>
+            }
+          </p>
+          @if (mode === 'criar' && form.controls.senha.value) {
+            <div class="meter" aria-hidden="true"><span [style.width.%]="(1 - passwordMissing / passwordRange.min) * 100"></span></div>
+          }
+        </div>
+
+        @if (mode === 'criar') {
+          <div class="terms" [class.invalid]="termsMissing">
+            <input id="termos" type="checkbox" formControlName="termos" aria-describedby="termos-erro" [attr.aria-invalid]="termsMissing">
+            <label for="termos">
+              {{ 'login.acceptA' | t }}
+              <a routerLink="/termos" fragment="termos" target="_blank" rel="noopener">{{ 'login.acceptTerms' | t }}<span class="sr-only"> {{ 'common.newTab' | t }}</span></a>
+              {{ 'login.acceptB' | t }}
+              <a routerLink="/termos" fragment="privacidade" target="_blank" rel="noopener">{{ 'login.acceptPrivacy' | t }}<span class="sr-only"> {{ 'common.newTab' | t }}</span></a>.
+            </label>
+          </div>
+          @if (termsMissing) { <p class="field-error" id="termos-erro">{{ 'login.acceptError' | t }}</p> }
+        }
+
+        <label class="remember">
+          <input type="checkbox" formControlName="lembrar" aria-describedby="lembrar-dica">
+          <span class="switch" aria-hidden="true"></span>
+          <span class="remember-text">
+            <b>{{ 'login.remember' | t }}</b>
+            <small id="lembrar-dica">{{ 'login.rememberHint' | t }}</small>
+          </span>
+        </label>
+
+        @if (errorKey) { <p class="form-error" role="alert">{{ errorKey | t }}</p> }
+
+        <button class="btn btn-ink btn-lg btn-block" type="submit" [disabled]="loading">
+          @if (loading) {
+            {{ (mode === 'criar' ? 'login.loadingSignup' : 'login.loadingLogin') | t }}
+          } @else {
+            {{ (mode === 'criar' ? 'login.submitSignup' : 'login.submitLogin') | t }}
+          }
+        </button>
+      </form>
+
+      <p class="divider"><span>{{ 'login.or' | t }}</span></p>
+
+      <!-- Login social (simulado: o projeto não tem back-end para OAuth) -->
+      <div class="social" role="group" [attr.aria-label]="'login.socialGroup' | t">
+        @for (p of providers; track p.id) {
+          <button type="button" class="social-btn" [disabled]="loading" (click)="social(p.id, p.name)"
+                  [attr.aria-label]="'login.social' | t: { provider: p.name }">
+            <span class="initial" aria-hidden="true">{{ p.name.charAt(0) }}</span>
+            {{ p.name }}
+          </button>
+        }
+      </div>
+    </div>
+  </section>
+</div>

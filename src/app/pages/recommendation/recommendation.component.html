@@ -1,0 +1,301 @@
+<section id="recommend" class="recommend section-dark">
+  <div class="section-heading">
+    <div>
+      <label>● 02 / RECOMENDAÇÃO PESSOAL</label>
+      <h2>Seu próximo calçado<br><span>ideal.</span></h2>
+    </div>
+    <div class="head-actions">
+      <button class="ghost" (click)="share()">↗ Compartilhar estilo</button>
+      <button class="save" (click)="saveAnalysis()">♡ Salvar análise</button>
+    </div>
+  </div>
+
+  <div class="filters" id="picks">
+    <div class="filter">
+      <label>MARCAS · <b>{{ brandLabel }}</b></label>
+      <select [value]="brand ?? ''" (change)="setBrand($any($event.target).value)" aria-label="Marca preferida">
+        <option value="" [selected]="!brand">Todas</option>
+        @for (b of brands; track b) {
+          <option [value]="b" [selected]="b === brand">{{ b }}</option>
+        }
+      </select>
+    </div>
+    <div class="filter">
+      <label>CORES · <b>{{ paletteLabel }}</b></label>
+      <select [value]="palette ?? ''" (change)="setPalette($any($event.target).value)" aria-label="Paleta de cores preferida">
+        <option value="" [selected]="!palette">Todas</option>
+        @for (p of palettes; track p.id) {
+          <option [value]="p.id" [selected]="p.id === palette">{{ p.label }}</option>
+        }
+      </select>
+    </div>
+    <div class="filter">
+      <label>ORÇAMENTO · até <b>{{ brl(budget) }}</b></label>
+      <input type="range" min="250" max="1000" step="50" [value]="budget" (input)="setBudget($any($event.target).value)" aria-label="Orçamento máximo">
+    </div>
+    <div class="filter">
+      <label>OUSADIA · <b>{{ boldness < 35 ? 'Combina com tudo' : boldness > 65 ? 'Fora da zona de conforto' : 'Equilibrado' }}</b></label>
+      <input type="range" min="0" max="100" step="5" [value]="boldness" (input)="setBoldness($any($event.target).value)" aria-label="Nível de ousadia">
+      <div class="scale"><span>Seguro</span><span>Arrojado</span></div>
+    </div>
+    <div class="filter small">
+      <label>SEU NÚMERO</label>
+      <select [value]="baseSize" (change)="setSize($any($event.target).value)" aria-label="Seu número usual">
+        @for (n of sizes; track n) {
+          <option [value]="n" [selected]="n === baseSize">{{ n }}</option>
+        }
+      </select>
+    </div>
+    <div class="filter small">
+      <label>USO · <b>{{ perWeek }}x</b>/semana</label>
+      <input type="range" min="1" max="7" step="1" [value]="perWeek" (input)="setPerWeek($any($event.target).value)" aria-label="Usos por semana">
+    </div>
+  </div>
+
+  @if (highlights.length) {
+    <div class="picks-grid">
+      @for (h of highlights; track h.item.shoe.id) {
+        <article class="pick" [class.featured]="h.featured">
+
+          <div class="pick-visual">
+            <div class="pick-art">
+              <senso-shoe-art [shoe]="h.item.shoe" />
+              <b class="tag">{{ h.icon }} {{ h.tag }}</b>
+              <button class="ring" [style.background]="ring(h.item.score.total)" (click)="toggleParts(h.item.shoe.id)" [attr.aria-label]="'Compatibilidade ' + h.item.score.total + '%. Ver detalhes'">
+                <span><strong>{{ h.item.score.total }}</strong><small>match</small></span>
+              </button>
+            </div>
+            @if (openParts === h.item.shoe.id) {
+              <div class="parts">
+                <div><span>Proporção</span><i><u [style.width.%]="h.item.score.parts.proporcao"></u></i><b>{{ h.item.score.parts.proporcao }}</b></div>
+                <div><span>Estilo</span><i><u [style.width.%]="h.item.score.parts.estilo"></u></i><b>{{ h.item.score.parts.estilo }}</b></div>
+                <div><span>Cor</span><i><u [style.width.%]="h.item.score.parts.cor"></u></i><b>{{ h.item.score.parts.cor }}</b></div>
+                <div><span>Ocasião</span><i><u [style.width.%]="h.item.score.parts.ocasiao"></u></i><b>{{ h.item.score.parts.ocasiao }}</b></div>
+              </div>
+            }
+          </div>
+
+          <div class="pick-main">
+            <label>{{ h.item.shoe.brand }} / {{ h.item.shoe.colorway }}</label>
+            <h3>{{ h.item.shoe.name }}</h3>
+            <p class="why">{{ whyOf(h.item.shoe) }}</p>
+
+            <div class="fits">
+              @for (f of piecesOf(h.item.shoe); track f.label) {
+                <span [class.ok]="f.ok" [class.no]="!f.ok">{{ f.ok ? '✓' : '△' }} {{ f.label }}</span>
+              }
+            </div>
+
+            @if (!isLoggedIn) {
+              <div class="buy-row">
+                <div>
+                  <label>MENOR PREÇO ENCONTRADO</label>
+                  <strong>{{ brl(h.item.shoe.stores[0].price) }}</strong>
+                </div>
+                <button class="lime-btn" (click)="buy(h.item.shoe)">Ver oferta ↗</button>
+              </div>
+              <ul class="stores">
+                @for (st of h.item.shoe.stores; track st.name) {
+                  <li><span>{{ st.name }}</span><b>{{ brl(st.price) }}</b></li>
+                }
+              </ul>
+            }
+
+            @if (isLoggedIn) {
+              <div class="stats">
+                <div>Conforto<strong>{{ h.item.shoe.comfort }}<small>/10</small></strong></div>
+                <div>Durabilidade<strong>{{ h.item.shoe.durability }}<small>/10</small></strong></div>
+                <div>Forma<strong>{{ h.item.shoe.form }}</strong></div>
+                <div>Uso<strong>{{ h.item.shoe.use }}</strong></div>
+              </div>
+
+              <p class="notfor"><b>Não indicado para:</b> {{ h.item.shoe.notFor }}</p>
+
+              @if (equivalent(h.item.shoe); as eq) {
+                <div class="equiv">
+                  Gostou, mas está caro? <strong>{{ eq.name }}</strong> é parecido e {{ saving(h.item.shoe, eq) }}% mais barato →
+                </div>
+              }
+            }
+          </div>
+
+          @if (isLoggedIn) {
+            <div class="pick-side">
+              <div class="radar" [class.buy]="verdictOf(h.item.shoe).buy">
+                <div>
+                  <b>{{ verdictOf(h.item.shoe).buy ? 'ϟ' : '◷' }} {{ verdictOf(h.item.shoe).label }}</b>
+                  <p>{{ verdictOf(h.item.shoe).detail }}</p>
+                  <small>Menor {{ brl(h.item.shoe.lowest) }} · média {{ brl(h.item.shoe.average) }}</small>
+                </div>
+                <svg viewBox="0 0 100 30" preserveAspectRatio="none" aria-hidden="true"><polyline [attr.points]="spark(h.item.shoe)" /></svg>
+              </div>
+
+              <ul class="facts">
+                <li><span>Número provável</span><b>{{ sizeOf(h.item.shoe) }} <small>({{ fitLabel(h.item.shoe) }})</small></b></li>
+                <li><span>Custo por uso*</span><b class="green">{{ cpu(h.item.shoe) }}</b></li>
+              </ul>
+              <small class="foot">*Estimativa: {{ usesOf(h.item.shoe) }} usos ao longo da vida útil, com {{ perWeek }}x por semana.</small>
+
+              <div class="buy-row">
+                <div>
+                  <label>MENOR PREÇO ENCONTRADO</label>
+                  <strong>{{ brl(h.item.shoe.stores[0].price) }}</strong>
+                </div>
+                <button class="lime-btn" (click)="buy(h.item.shoe)">Ver oferta ↗</button>
+              </div>
+              <ul class="stores">
+                @for (st of h.item.shoe.stores; track st.name) {
+                  <li><span>{{ st.name }}</span><b>{{ brl(st.price) }}</b></li>
+                }
+              </ul>
+            </div>
+          } @else {
+            <div class="pick-side pick-locked">
+              <div class="locked-wrap">
+                <div class="locked-content" aria-hidden="true">
+                  <div class="stats">
+                    <div>Conforto<strong>{{ h.item.shoe.comfort }}<small>/10</small></strong></div>
+                    <div>Durabilidade<strong>{{ h.item.shoe.durability }}<small>/10</small></strong></div>
+                    <div>Forma<strong>{{ h.item.shoe.form }}</strong></div>
+                    <div>Uso<strong>{{ h.item.shoe.use }}</strong></div>
+                  </div>
+
+                  <div class="radar" [class.buy]="verdictOf(h.item.shoe).buy">
+                    <div>
+                      <b>{{ verdictOf(h.item.shoe).buy ? 'ϟ' : '◷' }} {{ verdictOf(h.item.shoe).label }}</b>
+                      <p>{{ verdictOf(h.item.shoe).detail }}</p>
+                      <small>Menor {{ brl(h.item.shoe.lowest) }} · média {{ brl(h.item.shoe.average) }}</small>
+                    </div>
+                    <svg viewBox="0 0 100 30" preserveAspectRatio="none"><polyline [attr.points]="spark(h.item.shoe)" /></svg>
+                  </div>
+
+                  <ul class="facts">
+                    <li><span>Número provável</span><b>{{ sizeOf(h.item.shoe) }} <small>({{ fitLabel(h.item.shoe) }})</small></b></li>
+                    <li><span>Custo por uso*</span><b class="green">{{ cpu(h.item.shoe) }}</b></li>
+                  </ul>
+                </div>
+
+                <div class="locked-overlay">
+                  <span class="locked-icon">🔒</span>
+                  <strong>Faça login para liberar</strong>
+                  <p>Radar de compra, número provável e custo por uso ficam disponíveis depois que você entra na sua conta.</p>
+                  <a class="lime-btn" routerLink="/entrar">Entrar ou criar conta</a>
+                </div>
+              </div>
+            </div>
+          }
+        </article>
+      }
+    </div>
+  } @else {
+    <div class="empty">
+      <strong>Nenhum calçado com esses filtros.</strong>
+      <p>Aumente o orçamento ou limpe a ocasião e a cor para ver mais opções.</p>
+    </div>
+  }
+
+  @if (dismissed.length) {
+    <div class="dismissed">
+      <button class="link" (click)="showDismissed = !showDismissed">{{ showDismissed ? 'Ocultar' : 'Você dispensou' }} {{ dismissed.length }} {{ dismissed.length === 1 ? 'calçado' : 'calçados' }}</button>
+      @if (showDismissed) {
+        @for (d of dismissed; track d.id) {
+          <span>{{ d.name }} <button class="link" (click)="restore(d.id)">desfazer</button></span>
+        }
+      }
+    </div>
+  }
+
+  @if (interacted) {
+    <div class="account">
+      <div>
+        <b>Quer salvar seu guarda-roupa?</b>
+        <p>Suas escolhas já ficam neste navegador. Com uma conta, você leva tudo para qualquer lugar.</p>
+      </div>
+      <button class="ghost" (click)="toast('Criação de conta chega na próxima versão.')">Criar conta</button>
+    </div>
+  }
+
+  @if (compareIds.length) {
+    <div class="tray">
+      <span>{{ compareIds.length }}/3 para comparar</span>
+      <div class="tray-items">
+        @for (c of compareShoes; track c.id) {
+          <button class="tray-chip" (click)="toggleCompare(c.id)">{{ c.name }} ✕</button>
+        }
+      </div>
+      <button class="lime-btn" [disabled]="compareIds.length < 2" (click)="showCompare = !showCompare">
+        {{ showCompare ? 'Fechar comparação' : 'Comparar agora' }}
+      </button>
+    </div>
+  }
+
+  @if (showCompare && compareShoes.length > 1) {
+    <div class="compare-table" role="table">
+      <div class="ct-row ct-head" [style.grid-template-columns]="'160px repeat(' + compareShoes.length + ', 1fr)'">
+        <span></span>
+        @for (c of compareShoes; track c.id) { <strong>{{ c.name }}</strong> }
+      </div>
+      <div class="ct-row" [style.grid-template-columns]="'160px repeat(' + compareShoes.length + ', 1fr)'">
+        <span>Marca</span>
+        @for (c of compareShoes; track c.id) { <b>{{ c.brand }}</b> }
+      </div>
+      <div class="ct-row" [style.grid-template-columns]="'160px repeat(' + compareShoes.length + ', 1fr)'">
+        <span>Compatibilidade</span>
+        @for (c of compareShoes; track c.id) { <b class="green">{{ scoreOf(c).total }}%</b> }
+      </div>
+      <div class="ct-row" [style.grid-template-columns]="'160px repeat(' + compareShoes.length + ', 1fr)'">
+        <span>Preço</span>
+        @for (c of compareShoes; track c.id) { <b>{{ brl(c.price) }}</b> }
+      </div>
+      <div class="ct-row" [style.grid-template-columns]="'160px repeat(' + compareShoes.length + ', 1fr)'">
+        <span>Menor preço já visto</span>
+        @for (c of compareShoes; track c.id) { <b>{{ brl(c.lowest) }}</b> }
+      </div>
+      <div class="ct-row" [style.grid-template-columns]="'160px repeat(' + compareShoes.length + ', 1fr)'">
+        <span>Melhor loja</span>
+        @for (c of compareShoes; track c.id) { <span class="small">{{ bestStore(c) }}</span> }
+      </div>
+      <div class="ct-row" [style.grid-template-columns]="'160px repeat(' + compareShoes.length + ', 1fr)'">
+        <span>Custo por uso</span>
+        @for (c of compareShoes; track c.id) { <b>{{ cpu(c) }}</b> }
+      </div>
+      <div class="ct-row" [style.grid-template-columns]="'160px repeat(' + compareShoes.length + ', 1fr)'">
+        <span>Conforto</span>
+        @for (c of compareShoes; track c.id) { <b>{{ c.comfort }}/10</b> }
+      </div>
+      <div class="ct-row" [style.grid-template-columns]="'160px repeat(' + compareShoes.length + ', 1fr)'">
+        <span>Durabilidade</span>
+        @for (c of compareShoes; track c.id) { <b>{{ c.durability }}/10</b> }
+      </div>
+      <div class="ct-row" [style.grid-template-columns]="'160px repeat(' + compareShoes.length + ', 1fr)'">
+        <span>Forma</span>
+        @for (c of compareShoes; track c.id) { <b>{{ c.form }}</b> }
+      </div>
+      <div class="ct-row" [style.grid-template-columns]="'160px repeat(' + compareShoes.length + ', 1fr)'">
+        <span>Ajuste</span>
+        @for (c of compareShoes; track c.id) { <b>{{ fitLabel(c) }}</b> }
+      </div>
+      <div class="ct-row" [style.grid-template-columns]="'160px repeat(' + compareShoes.length + ', 1fr)'">
+        <span>Número provável</span>
+        @for (c of compareShoes; track c.id) { <b>{{ sizeOf(c) }}</b> }
+      </div>
+      <div class="ct-row" [style.grid-template-columns]="'160px repeat(' + compareShoes.length + ', 1fr)'">
+        <span>Uso recomendado</span>
+        @for (c of compareShoes; track c.id) { <b>{{ c.use }}</b> }
+      </div>
+      <div class="ct-row" [style.grid-template-columns]="'160px repeat(' + compareShoes.length + ', 1fr)'">
+        <span>Ocasiões</span>
+        @for (c of compareShoes; track c.id) { <span class="small">{{ occasionsOf(c) }}</span> }
+      </div>
+      <div class="ct-row" [style.grid-template-columns]="'160px repeat(' + compareShoes.length + ', 1fr)'">
+        <span>Radar de preço</span>
+        @for (c of compareShoes; track c.id) { <b [class.green]="verdictOf(c).buy">{{ verdictOf(c).label }}</b> }
+      </div>
+      <div class="ct-row" [style.grid-template-columns]="'160px repeat(' + compareShoes.length + ', 1fr)'">
+        <span>Não indicado para</span>
+        @for (c of compareShoes; track c.id) { <span class="small">{{ c.notFor }}</span> }
+      </div>
+    </div>
+  }
+</section>
+

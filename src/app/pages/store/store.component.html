@@ -1,0 +1,70 @@
+<section class="store-page">
+  <div class="store-hero">
+    <div>
+      <p class="eyebrow">CURADORIA CACTOURSHOES</p>
+      <h1>Encontre seu<br><em>próximo par.</em></h1>
+      <p class="hero-copy">Uma seleção de calçados pensada para combinar com o que você já usa — do básico bem resolvido ao par que muda o look.</p>
+    </div>
+    <button class="hero-link" type="button" (click)="goToRecommendation()">Descobrir meu match <span>↗</span></button>
+  </div>
+
+  <div class="store-toolbar">
+    <div class="toolbar-result"><strong>{{ filteredShoes.length }}</strong> produtos encontrados</div>
+    <button class="filter-toggle" type="button" (click)="mobileFiltersOpen = !mobileFiltersOpen">{{ mobileFiltersOpen ? 'Fechar filtros' : 'Filtrar produtos' }} <span>☷</span></button>
+    <label class="sort-control">Ordenar por
+      <select [(ngModel)]="sort" aria-label="Ordenar produtos">
+        <option value="relevancia">Mais relevantes</option>
+        <option value="menor-preco">Menor preço</option>
+        <option value="maior-preco">Maior preço</option>
+        <option value="maior-conforto">Maior conforto</option>
+      </select>
+    </label>
+  </div>
+
+  <div class="store-layout">
+    <aside class="filters" [class.open]="mobileFiltersOpen">
+      <div class="filter-header"><strong>Filtrar</strong><button type="button" (click)="clearFilters()">Limpar tudo</button></div>
+      <label class="filter-search"><span>⌕</span><input [(ngModel)]="query" type="search" placeholder="Buscar no catálogo" aria-label="Buscar no catálogo"></label>
+
+      <fieldset>
+        <legend>Categoria</legend>
+        <label><input type="radio" name="kind" [(ngModel)]="selectedKind" value="todos"><span>Todos</span><small>{{ catalog.length }}</small></label>
+        <label><input type="radio" name="kind" [(ngModel)]="selectedKind" value="tenis"><span>Tênis</span><small>{{ countKind('tenis') }}</small></label>
+        <label><input type="radio" name="kind" [(ngModel)]="selectedKind" value="bota"><span>Botas</span><small>{{ countKind('bota') }}</small></label>
+        <label><input type="radio" name="kind" [(ngModel)]="selectedKind" value="sapato"><span>Sapatos</span><small>{{ countKind('sapato') }}</small></label>
+      </fieldset>
+
+      <fieldset>
+        <legend>Marca</legend>
+        <label *ngFor="let brand of brands"><input type="radio" name="brand" [(ngModel)]="selectedBrand" [value]="brand"><span>{{ brand }}</span><small>{{ countBrand(brand) }}</small></label>
+        <label><input type="radio" name="brand" [(ngModel)]="selectedBrand" value="Todas"><span>Todas as marcas</span></label>
+      </fieldset>
+
+      <fieldset>
+        <legend>Paleta</legend>
+        <label *ngFor="let color of colorFilters"><input type="radio" name="palette" [(ngModel)]="selectedPalette" [value]="color.id"><i class="color-dot" [style.background]="color.color"></i><span>{{ color.label }}</span></label>
+        <label><input type="radio" name="palette" [(ngModel)]="selectedPalette" value="todas"><span>Todas as cores</span></label>
+      </fieldset>
+    </aside>
+
+    <main class="product-area">
+      <div class="product-grid" *ngIf="filteredShoes.length; else emptyState">
+        <article class="product-card" *ngFor="let shoe of filteredShoes; let i = index">
+          <div class="product-media">
+            <span class="product-index">{{ (i + 1).toString().padStart(2, '0') }}</span>
+            <button class="favorite" type="button" [class.active]="isFavorite(shoe.id)" (click)="toggleFavorite(shoe.id)" [attr.aria-label]="isFavorite(shoe.id) ? 'Remover dos favoritos' : 'Adicionar aos favoritos'">{{ isFavorite(shoe.id) ? '♥' : '♡' }}</button>
+            <senso-shoe-art [shoe]="shoe"></senso-shoe-art>
+          </div>
+          <div class="product-info">
+            <div><p class="product-brand">{{ shoe.brand }}</p><h2>{{ shoe.name }}</h2><p class="product-color">{{ shoe.colorway }}</p></div>
+            <div class="price-block"><span>desde</span><strong>R$ {{ shoe.lowest | number:'1.2-2' }}</strong></div>
+          </div>
+          <button class="product-action" type="button" (click)="toast(shoe.name + ' adicionado à sua seleção.')">Ver detalhes <span>↗</span></button>
+        </article>
+      </div>
+      <ng-template #emptyState>
+        <div class="empty-state"><span>⌕</span><h2>Nenhum par encontrado.</h2><p>Tente limpar os filtros ou buscar por outra marca.</p><button type="button" (click)="clearFilters()">Limpar filtros</button></div>
+      </ng-template>
+    </main>
+  </div>
+</section>

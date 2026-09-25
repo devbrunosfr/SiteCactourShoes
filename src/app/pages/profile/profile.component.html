@@ -1,0 +1,53 @@
+<section class="profile-page">
+  <div class="profile-hero">
+    <div>
+      <span class="eyebrow">CONTA CACTOURSHOES</span>
+      <h1>Olá, {{ name.split(' ')[0] }}.</h1>
+      <p>Seu espaço para acompanhar escolhas, preços e o que combina com o seu estilo.</p>
+    </div>
+    <div class="avatar">{{ auth.initial || 'C' }}</div>
+  </div>
+
+  <div class="profile-grid">
+    <article class="panel identity-card">
+      <div class="panel-heading"><span>01</span><h2>Dados pessoais</h2></div>
+      <div class="identity-row"><div class="avatar small">{{ auth.initial || 'C' }}</div><div><strong>{{ name }}</strong><span>{{ email }}</span></div></div>
+      <label>Nome completo<input [value]="name" readonly></label>
+      <label>E-mail<input [value]="email" readonly></label>
+      <button class="button secondary" type="button">Editar dados</button>
+    </article>
+
+    <article class="panel profile-score">
+      <div class="panel-heading"><span>02</span><h2>Seu perfil de estilo</h2></div>
+      <div class="score-ring"><b>87</b><span>compatibilidade</span></div>
+      <div class="traits"><span>Streetwear</span><span>Oversized</span><span>Neutras</span><span>Chunky</span></div>
+      <a routerLink="/recomendacao" class="text-link">Refazer análise <span>↗</span></a>
+    </article>
+
+    <article class="panel stats-panel">
+      <div class="panel-heading"><span>03</span><h2>Seu histórico</h2></div>
+      <div class="stat" *ngFor="let stat of stats"><strong>{{ stat.value }}</strong><span>{{ stat.label }}</span></div>
+      <div class="divider"></div>
+      <a routerLink="/guarda-roupa" class="button primary">Abrir meu guarda-roupa <span>→</span></a>
+    </article>
+  </div>
+
+  <article class="panel analyses-panel">
+    <div class="panel-heading"><span>04</span><h2>Análises salvas</h2></div>
+    <div class="analysis-row" *ngFor="let a of analyses">
+      <div>
+        <strong>{{ a.shoeName }}</strong>
+        <span>{{ a.estilo }} · {{ a.cores }} · {{ a.verdict }}</span>
+      </div>
+      <b>{{ a.score }}%</b>
+      <button type="button" (click)="removeAnalysis(a.id)" aria-label="Remover análise">✕</button>
+    </div>
+    <div class="empty" *ngIf="!analyses.length">Nenhuma análise salva ainda. Clique em "Salvar análise" na página de recomendações.</div>
+  </article>
+
+  <div class="quick-links">
+    <a routerLink="/comparar"><span>Comparar produtos</span><b>↗</b></a>
+    <a routerLink="/radar-preco"><span>Radar de preço</span><b>↗</b></a>
+    <a routerLink="/tamanho-ideal"><span>Encontrar meu tamanho</span><b>↗</b></a>
+  </div>
+</section>

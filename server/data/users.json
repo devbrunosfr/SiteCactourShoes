@@ -1,0 +1,27 @@
+[
+  {
+    "id": "bb56afb8-7d02-4f0d-97dd-2eb8aec5c35f",
+    "nome": "Bruno",
+    "email": "robervis@gmail.com",
+    "senhaHash": "$2a$10$YB6c8KiT6L05a6QltD43Be.U6CfiRLo/bsrltuE0RWEvkBpny.8p2",
+    "criadoEm": "2026-09-21T23:40:35.888Z"
+  },
+  {
+    "id": "2eb8cda4-0278-4033-880d-6a5ac10ff88c",
+    "nome": "sdds",
+    "email": "sdsd@sdfdsff.com",
+    "senhaHash": "$2a$10$g.RCZGHAX0uxxUHkI19mEOuDUh.TQbvipZVjGTdZZUYWsWM2XG7TK",
+    "provider": "email",
+    "acceptedTermsAt": "2026-09-24T09:44:19.322Z",
+    "criadoEm": "2026-09-24T09:44:19.322Z"
+  },
+  {
+    "id": "099be55b-755e-4ff1-bedd-110600fbb438",
+    "nome": "Bruno",
+    "email": "bruno@gmail.com",
+    "senhaHash": "$2a$10$dTxUAuxsw6BnVf0BJbN.T.M/wigr31jNDeGJJQT/tB0TYy2/EOZRS",
+    "provider": "email",
+    "acceptedTermsAt": "2026-09-24T16:49:25.688Z",
+    "criadoEm": "2026-09-24T16:49:25.689Z"
+  }
+]
