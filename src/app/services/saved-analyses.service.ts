@@ -11,6 +11,15 @@ export interface SavedAnalysis {
   why: string;
   estilo: string;
   cores: string;
+  snapshot?: {
+    choice: Record<string, string>;
+    palette: string | null;
+    brandFilter: string | null;
+    boldness: number;
+    budget: number;
+    perWeek: number;
+    baseSize: number;
+  };
 }
 
 const STORE_KEY = 'cactour.saved-analyses.v1';

@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { CATALOG, Shoe } from '../../data/catalog';
 import { ShellService } from '../../services/shell.service';
 import { ShoeArtComponent } from '../recommendation/shoe-art.component';
@@ -13,9 +13,10 @@ import { ShoeArtComponent } from '../recommendation/shoe-art.component';
   templateUrl: './store.component.html',
   styleUrl: './store.component.css'
 })
-export class StoreComponent {
+export class StoreComponent implements OnInit {
   private readonly shell = inject(ShellService);
   private readonly router = inject(Router);
+  private readonly route = inject(ActivatedRoute);
 
   readonly catalog = CATALOG;
   readonly brands = Array.from(new Set(CATALOG.map(shoe => shoe.brand))).sort((a, b) => a.localeCompare(b, 'pt-BR'));
@@ -32,6 +33,12 @@ export class StoreComponent {
   sort = 'relevancia';
   favorites = new Set<string>();
   mobileFiltersOpen = false;
+
+  ngOnInit(): void {
+    this.route.queryParamMap.subscribe(params => {
+      this.query = params.get('q') ?? '';
+    });
+  }
 
   get filteredShoes(): Shoe[] {
     const query = this.query.trim().toLocaleLowerCase('pt-BR');

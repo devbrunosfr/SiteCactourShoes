@@ -40,6 +40,7 @@
         <span>{{ a.estilo }} · {{ a.cores }} · {{ a.verdict }}</span>
       </div>
       <b>{{ a.score }}%</b>
+      <button type="button" class="reopen" (click)="reopenAnalysis(a.id)" aria-label="Ver essa indicação novamente" title="Ver essa indicação novamente">↺</button>
       <button type="button" (click)="removeAnalysis(a.id)" aria-label="Remover análise">✕</button>
     </div>
     <div class="empty" *ngIf="!analyses.length">Nenhuma análise salva ainda. Clique em "Salvar análise" na página de recomendações.</div>

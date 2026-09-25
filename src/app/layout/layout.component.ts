@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { Router, RouterOutlet } from '@angular/router';
 import { AuthService } from '../auth/auth.service';
 import { ShellService } from '../services/shell.service';
@@ -8,7 +9,7 @@ import { WardrobeStateService } from '../services/wardrobe-state.service';
 @Component({
   selector: 'senso-layout',
   standalone: true,
-  imports: [CommonModule, RouterOutlet],
+  imports: [CommonModule, FormsModule, RouterOutlet],
   templateUrl: './layout.component.html',
   styleUrl: './layout.component.css'
 })
@@ -22,6 +23,8 @@ export class LayoutComponent {
   private readonly wardrobe = inject(WardrobeStateService);
 
   menuOpen = false;
+
+  searchTerm = '';
 
   get active(): string {
     return this.shell.active;
@@ -46,6 +49,12 @@ export class LayoutComponent {
 
   toast(message: string): void {
     this.shell.toast(message);
+  }
+
+  search(): void {
+    const term = this.searchTerm.trim();
+    this.closeMenu();
+    void this.router.navigate(['/loja'], term ? { queryParams: { q: term } } : {});
   }
 
   goLogin(): void {

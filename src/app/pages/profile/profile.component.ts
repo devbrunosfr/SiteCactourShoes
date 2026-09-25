@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../auth/auth.service';
 import { CATALOG } from '../../data/catalog';
 import { SavedAnalysesService } from '../../services/saved-analyses.service';
@@ -16,6 +16,7 @@ export class ProfileComponent {
   readonly auth = inject(AuthService);
   readonly catalog = CATALOG;
   private readonly savedAnalyses = inject(SavedAnalysesService);
+  private readonly router = inject(Router);
 
   get analyses() { return this.savedAnalyses.list; }
 
@@ -32,5 +33,9 @@ export class ProfileComponent {
 
   removeAnalysis(id: string): void {
     this.savedAnalyses.remove(id);
+  }
+
+  reopenAnalysis(id: string): void {
+    void this.router.navigate(['/recomendacao'], { queryParams: { analise: id } });
   }
 }

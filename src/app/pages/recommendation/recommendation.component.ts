@@ -1,5 +1,5 @@
 import { Component, OnInit, inject } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 import { ShellService } from '../../services/shell.service';
 import { WardrobeStateService } from '../../services/wardrobe-state.service';
 import { SavedAnalysesService } from '../../services/saved-analyses.service';
@@ -28,6 +28,7 @@ export class RecommendationComponent implements OnInit {
   private readonly state = inject(WardrobeStateService);
   private readonly auth = inject(AuthService);
   private readonly savedAnalyses = inject(SavedAnalysesService);
+  private readonly route = inject(ActivatedRoute);
 
   readonly brands = BRANDS;
   readonly palettes = PALETTES;
@@ -68,7 +69,29 @@ export class RecommendationComponent implements OnInit {
       calcas: sel['calcas']?.id ?? 'wide-leg'
     };
     this.load();
+    this.applySavedAnalysisFromRoute();
     this.recompute();
+  }
+
+  private applySavedAnalysisFromRoute(): void {
+    const id = this.route.snapshot.queryParamMap.get('analise');
+    if (!id) return;
+
+    const saved = this.savedAnalyses.list.find(a => a.id === id);
+    if (!saved || !saved.snapshot) {
+      this.toast('Não encontramos os detalhes dessa análise salva.');
+      return;
+    }
+
+    const s = saved.snapshot;
+    this.choice = { ...this.choice, ...s.choice };
+    this.palette = (s.palette as Shoe['palette'] | null) ?? null;
+    this.brand = s.brandFilter;
+    this.boldness = s.boldness;
+    this.budget = s.budget;
+    this.perWeek = s.perWeek;
+    this.baseSize = s.baseSize;
+    this.toast(`Mostrando a indicação salva: ${saved.shoeName}.`);
   }
 
   get profile(): Profile {
@@ -249,7 +272,16 @@ export class RecommendationComponent implements OnInit {
       verdict: this.verdictOf(best.shoe).label,
       why: this.whyOf(best.shoe),
       estilo: this.summary[0].value,
-      cores: this.paletteLabel
+      cores: this.paletteLabel,
+      snapshot: {
+        choice: { ...this.choice },
+        palette: this.palette,
+        brandFilter: this.brand,
+        boldness: this.boldness,
+        budget: this.budget,
+        perWeek: this.perWeek,
+        baseSize: this.baseSize
+      }
     });
 
     this.toast(this.isLoggedIn

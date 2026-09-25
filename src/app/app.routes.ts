@@ -8,6 +8,7 @@ import { ProfileComponent } from './pages/profile/profile.component';
 import { InsightComponent } from './pages/insight/insight.component';
 import { WardrobeComponent } from './pages/wardrobe/wardrobe.component';
 import { TermsComponent } from './pages/terms/terms.component';
+import { StoreComponent } from './pages/store/store.component';
 
 export const routes: Routes = [
   
@@ -17,6 +18,7 @@ export const routes: Routes = [
     children: [
       { path: '', pathMatch: 'full', component: HomeComponent, title: 'CactourShoes — Plataforma Inteligente de Calçados' },
       { path: 'guarda-roupa', component: WardrobeComponent, canActivate: [authGuard], title: 'CactourShoes — Criar meu guarda-roupa' },
+      { path: 'loja', component: StoreComponent, canActivate: [authGuard], title: 'CactourShoes — Loja' },
       { path: 'recomendacao', component: RecommendationComponent, title: 'CactourShoes — Seu próximo calçado ideal' },
       { path: 'termos', component: TermsComponent, title: 'titles.terms' },
       { path: 'perfil', component: ProfileComponent, canActivate: [authGuard], title: 'CactourShoes — Meu perfil' },

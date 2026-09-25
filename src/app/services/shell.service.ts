@@ -20,7 +20,7 @@ export class ShellService {
         const route = path.split('?')[0];
 
         const routeMap: Record<string, string> = {
-          '/recomendacao': 'wardrobe', '/guarda-roupa': 'wardrobe', '/alertas-preco': 'radar',
+          '/recomendacao': 'wardrobe', '/guarda-roupa': 'wardrobe', '/alertas-preco': 'radar', '/loja': 'loja',
           '/comparar': 'compare', '/tamanho-ideal': 'size',
           '/radar-preco': 'radar', '/durabilidade': 'durability', '/perfil': 'profile'
         };
