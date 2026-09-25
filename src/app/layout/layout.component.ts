@@ -65,6 +65,10 @@ export class LayoutComponent {
   logout(): void {
     this.closeMenu();
     this.auth.logout();
+    if (this.wardrobe.lockPhase !== 'locked') {
+      this.wardrobe.lock();
+    }
     this.shell.toast('Você saiu da sua conta.');
+    void this.router.navigate(['/']);
   }
 }
