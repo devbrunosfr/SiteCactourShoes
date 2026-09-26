@@ -1,0 +1,41 @@
+{
+  "name": "navycare-angular",
+  "version": "1.0.0",
+  "private": true,
+  "description": "NavyCare — gestão de manutenção para pequenas empresas em Angular + API Express",
+  "scripts": {
+    "start": "ng serve",
+    "api": "PORT=3333 node server/index.js",
+    "dev": "concurrently \"ng serve\" \"node server/index.js\"",
+    "build": "ng build",
+    "build:api": "node -e \"require('fs').mkdirSync('dist-api',{recursive:true})\" && cp -r server dist-api/server",
+    "zip": "npm run build && npm run build:api && zip -r navycare-angular.zip . -x 'node_modules/*' '.angular/*' '.git/*' 'dist/*' '*.zip'",
+    "test": "ng test --watch=false --browsers=ChromeHeadless"
+  },
+  "dependencies": {
+    "@angular/animations": "^20.0.0",
+    "@angular/common": "^20.0.0",
+    "@angular/compiler": "^20.0.0",
+    "@angular/core": "^20.0.0",
+    "@angular/forms": "^20.0.0",
+    "@angular/platform-browser": "^20.0.0",
+    "@angular/router": "^20.0.0",
+    "bcryptjs": "^3.0.2",
+    "cors": "^2.8.5",
+    "express": "^5.1.0",
+    "jsonwebtoken": "^9.0.2",
+    "rxjs": "~7.8.0",
+    "tslib": "^2.3.0",
+    "zone.js": "~0.15.0"
+  },
+  "devDependencies": {
+    "@angular/build": "^20.0.0",
+    "@angular/cli": "^20.0.0",
+    "@angular/compiler-cli": "^20.0.0",
+    "@types/express": "^5.0.3",
+    "@types/jsonwebtoken": "^9.0.9",
+    "@types/node": "^22.14.0",
+    "concurrently": "^9.1.2",
+    "typescript": "~5.8.2"
+  }
+}

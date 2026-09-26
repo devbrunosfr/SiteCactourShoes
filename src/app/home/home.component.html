@@ -1,0 +1,91 @@
+<div class="flip-stage" [class.flipped]="showHow">
+  <div class="flip-face flip-front">
+  <main class="landing-shell">
+  <nav class="landing-nav" aria-label="Navegação principal">
+    <a class="brand" routerLink="/"><span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M10 3a2 2 0 0 0-2 2v5H7V8a1 1 0 0 0-2 0v2a3 3 0 0 0 3 3h0v6h4v-6h1a3 3 0 0 0 3-3V8a1 1 0 0 0-2 0v2h-1V5a2 2 0 0 0-2-2Z"/><path d="M7 19h10l-1 3H8l-1-3Z"/></svg></span><span class="brand-name">Prote<span>Cacto</span></span></a>
+    <div class="landing-actions"><a routerLink="/onboarding" class="button button-navy button-sm">Criar conta <span class="material-symbols-rounded">arrow_forward</span></a></div>
+  </nav>
+  <section class="landing-hero" aria-labelledby="hero-title">
+    <div class="hero-copy"><div class="eyebrow"><span class="material-symbols-rounded">auto_awesome</span> Gestão sem planilha, sem esquecimento</div><h1 id="hero-title">A manutenção da sua empresa, <em>sob controle.</em></h1><p class="hero-lede">Patrimônio, manutenções e custos organizados em um só lugar. O ProteCacto mostra o que precisa de atenção hoje — antes que vire problema.</p><div class="hero-actions"><a routerLink="/login" class="button button-navy button-lg">Acessar minha conta <span class="material-symbols-rounded">arrow_forward</span></a><a href="#como-funciona" class="text-link" (click)="openHow(); $event.preventDefault()">Conhecer a plataforma <span class="material-symbols-rounded">chevron_right</span></a></div><div class="trust-line"><span class="material-symbols-rounded">check</span> Feito para escritórios, escolas, lojas e condomínios</div></div>
+    <div class="hero-visual" aria-label="Prévia do dashboard ProteCacto"><div class="hero-glow"></div>
+      <div class="hero-carousel">
+        <div class="carousel-slide" [class.active]="activeSlide === 0" [attr.aria-hidden]="activeSlide === 0 ? null : 'true'">
+          <div class="preview-wrap">
+            <div class="preview-window"><div class="preview-topbar"><span class="window-dots"><i></i><i></i><i></i></span><span class="preview-title">Visão geral <small>• atualizado agora</small></span><span class="preview-avatar">J</span></div><div class="preview-content"><div class="preview-heading"><div><small>Bom dia, Jailson</small><strong>O que precisa da sua atenção?</strong></div><span class="preview-date">25 set 2026</span></div><div class="preview-kpis"><div><span>Ativos</span><b>10</b><small class="positive">+2 este mês</small></div><div><span>Preventivas próximas</span><b>03</b><small class="warning">12 dias</small></div><div><span>OS abertas</span><b>02</b><small class="neutral">em andamento</small></div></div><div class="preview-grid"><div class="preview-alert"><div class="alert-icon"><span class="material-symbols-rounded">schedule</span></div><div><small>ATENÇÃO</small><strong>Ar-condicionado #03</strong><p>Precisa de manutenção em 12 dias.</p></div><span class="material-symbols-rounded">arrow_forward</span></div><div class="preview-chart"><div class="chart-head"><span>Custos de manutenção</span><b>R$ 1.280</b></div><svg viewBox="0 0 260 76" role="img" aria-label="Gráfico de custos"><path d="M0 62 C22 54,29 60,47 45 S71 39,85 48 S110 21,126 31 S149 44,165 24 S183 34,199 22 S218 14,233 25 S250 15,260 4" fill="none" stroke="#2d6cdf" stroke-width="3" stroke-linecap="round"/><path d="M0 62 C22 54,29 60,47 45 S71 39,85 48 S110 21,126 31 S149 44,165 24 S183 34,199 22 S218 14,233 25 S250 15,260 4 V76 H0Z" fill="#2d6cdf" opacity=".12"/></svg><div class="chart-labels"><span>Mai</span><span>Jun</span><span>Jul</span><span>Ago</span><span>Set</span></div></div></div><div class="preview-list"><div class="list-head"><span>Próximas manutenções</span><small>Ver todas</small></div><div class="list-row"><span class="mini-icon blue"><span class="material-symbols-rounded">build</span></span><div><strong>Higienização · AC #03</strong><small>02 out · Sala de reunião</small></div><span class="status-pill amber">Em 12 dias</span></div><div class="list-row"><span class="mini-icon purple"><span class="material-symbols-rounded">verified_user</span></span><div><strong>Garantia · Impressora #02</strong><small>Vence em 18 dias</small></div><span class="status-pill green">Ativa</span></div></div></div></div>
+            <div class="hero-corner-note"><span class="material-symbols-rounded">check_circle</span><span><strong>92%</strong><br>preventivas em dia</span></div>
+          </div>
+        </div>
+        <div class="carousel-slide" [class.active]="activeSlide === 1" [attr.aria-hidden]="activeSlide === 1 ? null : 'true'">
+          <div class="preview-wrap">
+            <img class="carousel-photo" src="images/navycare-manutencao-tripla.png" alt="Técnico realizando manutenções preventivas com o apoio do ProteCacto" />
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <section class="landing-bottom" id="como-funciona"><div><span class="bottom-kicker">Tudo em uma visão</span><strong>Infinitos ativos. Uma operação tranquila.</strong></div><div class="bottom-proof"><span><span class="material-symbols-rounded">verified_user</span> Histórico rastreável</span><span><span class="material-symbols-rounded">schedule</span> Alertas inteligentes</span><span><span class="material-symbols-rounded">check</span> Feito para equipes pequenas</span></div></section>
+  <span id="recursos" class="sr-only">Patrimônio, manutenção preventiva, ordens de serviço, garantias, fornecedores, custos e relatórios.</span><span id="seguranca" class="sr-only">Segurança e controle de acesso por usuário.</span>
+</main>
+  </div>
+  <div class="flip-face flip-back">
+  <main class="how-shell">
+    <header class="how-header">
+      <a class="brand" routerLink="/"><span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M10 3a2 2 0 0 0-2 2v5H7V8a1 1 0 0 0-2 0v2a3 3 0 0 0 3 3h0v6h4v-6h1a3 3 0 0 0 3-3V8a1 1 0 0 0-2 0v2h-1V5a2 2 0 0 0-2-2Z"/><path d="M7 19h10l-1 3H8l-1-3Z"/></svg></span><span class="brand-name">Prote<span>Cacto</span></span></a>
+      <button type="button" class="button button-light button-sm" (click)="closeHow()"><span class="material-symbols-rounded">arrow_back</span> Voltar</button>
+    </header>
+    <div class="how-content">
+      <span class="eyebrow"><span class="material-symbols-rounded">auto_awesome</span> Como funciona</span>
+      <h1>Do esquecimento ao controle, em um só painel.</h1>
+      <p class="how-lede">O ProteCacto organiza o patrimônio e a manutenção da sua empresa — de escritórios a condomínios — trocando planilha, papel e memória por um painel visual, rastreável e orientado por alertas.</p>
+
+      <section class="how-section">
+        <h2>Do problema à solução</h2>
+        <div class="how-table">
+          <div class="how-row"><span class="how-problem"><span class="material-symbols-rounded">schedule</span> Esquecer manutenções</span><span class="how-arrow">→</span><span class="how-answer">Calendário + alertas por antecedência + painel de pendências</span></div>
+          <div class="how-row"><span class="how-problem"><span class="material-symbols-rounded">location_on</span> Não saber onde está cada equipamento</span><span class="how-arrow">→</span><span class="how-answer">Patrimônio com unidade, ambiente, responsável e status</span></div>
+          <div class="how-row"><span class="how-problem"><span class="material-symbols-rounded">history</span> Perder o histórico</span><span class="how-arrow">→</span><span class="how-answer">Linha do tempo por ativo e histórico global</span></div>
+          <div class="how-row"><span class="how-problem"><span class="material-symbols-rounded">verified_user</span> Perder a garantia</span><span class="how-arrow">→</span><span class="how-answer">Vigência com alerta de vencimento e documentos anexados</span></div>
+          <div class="how-row"><span class="how-problem"><span class="material-symbols-rounded">payments</span> Não saber quanto se gasta</span><span class="how-arrow">→</span><span class="how-answer">Custos por ordem de serviço, ativo, período e cliente</span></div>
+        </div>
+      </section>
+
+      <section class="how-section">
+        <h2>Como tudo se organiza</h2>
+        <p>A estrutura segue uma hierarquia simples, que acompanha a forma como sua empresa realmente funciona:</p>
+        <div class="how-hierarchy"><span>Cliente</span><span class="material-symbols-rounded">arrow_forward</span><span>Unidade</span><span class="material-symbols-rounded">arrow_forward</span><span>Ambiente</span><span class="material-symbols-rounded">arrow_forward</span><span>Ativo</span></div>
+        <p class="how-example">Exemplo: <strong>Condomínio Central Park</strong> → <strong>Torre A</strong> → <strong>Sala do síndico</strong> → <strong>PC-002</strong>.</p>
+      </section>
+
+      <section class="how-section">
+        <h2>Um painel que avisa antes de virar problema</h2>
+        <p>A primeira tela responde uma pergunta simples: <em>o que precisa da minha atenção hoje?</em> Ela reúne total de ativos, preventivas próximas e atrasadas, ordens de serviço abertas, garantias a vencer, custo do mês e a taxa de preventivas em dia.</p>
+        <div class="how-alert-demo"><div class="alert-icon"><span class="material-symbols-rounded">schedule</span></div><div><small>ATENÇÃO</small><strong>Ar-condicionado #03</strong><p>Precisa de manutenção em 12 dias.</p></div></div>
+        <p>Cada alerta é calculado automaticamente pela data da próxima manutenção preventiva — sem depender de alguém lembrar.</p>
+      </section>
+
+      <section class="how-section">
+        <h2>Manutenção preventiva no piloto automático</h2>
+        <p>Cada ativo pode ter um plano com periodicidade (ex.: a cada 90 dias), checklist, responsável padrão e antecedência de alerta (ex.: 30, 14 e 3 dias antes). Ao concluir uma preventiva, o ProteCacto recalcula sozinho a próxima data. Se atrasar, a pendência continua visível até ser resolvida — nada desaparece silenciosamente.</p>
+      </section>
+
+      <section class="how-section">
+        <h2>Ordens de serviço, do abrir ao concluir</h2>
+        <p>Toda manutenção — preventiva ou corretiva — vira uma ordem de serviço rastreável, com número automático, prioridade, checklist, peças, mão de obra e fotos, passando por um fluxo de status claro:</p>
+        <div class="how-flow"><span class="badge gray">Aberta</span><span class="material-symbols-rounded">chevron_right</span><span class="badge amber">Em andamento</span><span class="material-symbols-rounded">chevron_right</span><span class="badge blue">Aguardando peça</span><span class="material-symbols-rounded">chevron_right</span><span class="badge green">Concluída</span></div>
+      </section>
+
+      <section class="how-section">
+        <h2>Tudo documentado, sempre</h2>
+        <ul class="how-bullets">
+          <li><span class="material-symbols-rounded">history</span> <strong>Histórico:</strong> cada mudança de status, custo ou cadastro fica registrada, com usuário e data.</li>
+          <li><span class="material-symbols-rounded">verified_user</span> <strong>Garantias:</strong> vigência, cobertura e documentos, com aviso antes do vencimento.</li>
+          <li><span class="material-symbols-rounded">groups</span> <strong>Fornecedores:</strong> contatos, categorias e histórico de serviços prestados.</li>
+          <li><span class="material-symbols-rounded">bar_chart</span> <strong>Relatórios:</strong> manutenções, custos, garantias e disponibilidade, exportáveis em CSV, XLSX e PDF.</li>
+        </ul>
+      </section>
+
+      <div class="how-cta"><a routerLink="/onboarding" class="button button-navy button-lg">Criar conta <span class="material-symbols-rounded">arrow_forward</span></a><button type="button" class="text-link" style="padding:0;background:none;border:0;cursor:pointer" (click)="closeHow()">Voltar para o início <span class="material-symbols-rounded">chevron_right</span></button></div>
+    </div>
+  </main>
+  </div>
+</div>
