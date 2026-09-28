@@ -57,6 +57,10 @@ export class OnboardingComponent {
   }
 
   back(): void {
+    if (this.addingUnit) {
+      this.router.navigate(['/app/visao-geral']);
+      return;
+    }
     if (this.step > 0) this.step--;
     else this.router.navigate(['/']);
   }

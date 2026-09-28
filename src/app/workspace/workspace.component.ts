@@ -289,7 +289,8 @@ export class WorkspaceComponent implements OnDestroy {
 
   private readonly monthAbbr = ['jan', 'fev', 'mar', 'abr', 'mai', 'jun', 'jul', 'ago', 'set', 'out', 'nov', 'dez'];
   private readonly donutColors = ['#3974ce', '#7fa8e5', '#94c6ad', '#e6b967'];
-  private readonly donutValues = [4, 3, 2, 1];
+  private persistenceKey = '';
+  private readonly defaultDonutValues = [4, 3, 2, 1];
   private donutTimer: ReturnType<typeof setInterval> | undefined;
   private donutFrame: number | undefined;
   currentBrasiliaDate = '';
@@ -388,7 +389,8 @@ export class WorkspaceComponent implements OnDestroy {
     window.alert('Assinado com sucesso\n\nFoi debitado 1 milhão da sua conta bancária.');
   }
   constructor() {
-    this.donutGradient = this.buildDonutGradient(this.donutValues);
+    this.loadPersistedData();
+    this.donutGradient = this.buildDonutGradient(this.assetDistributionValues());
     this.updateBrasiliaClock();
     this.brasiliaClockTimer = setInterval(() => this.updateBrasiliaClock(), 1000);
     this.route.queryParamMap.subscribe((params) => {
@@ -431,7 +433,7 @@ export class WorkspaceComponent implements OnDestroy {
     clearInterval(this.donutTimer);
     if (this.donutFrame !== undefined) cancelAnimationFrame(this.donutFrame);
 
-    const total = this.assets.length;
+    const total = this.assets.length || 1;
     const duration = 1200;
     const start = performance.now();
 
@@ -448,7 +450,7 @@ export class WorkspaceComponent implements OnDestroy {
     const step = (now: number) => {
       const t = Math.min(1, (now - start) / duration);
       const settle = 1 - Math.pow(1 - t, 3);
-      const liveValues = this.donutValues.map((value, i) => {
+      const liveValues = this.assetDistributionValues().map((value, i) => {
         const phase = i * (Math.PI / 2);
         const wobble = Math.sin(t * 5 * Math.PI + phase) * (1 - t) * 0.6;
         const factor = Math.max(0.04, settle + wobble);
@@ -458,7 +460,7 @@ export class WorkspaceComponent implements OnDestroy {
       if (t < 1) {
         this.donutFrame = requestAnimationFrame(step);
       } else {
-        this.donutGradient = this.buildDonutGradient(this.donutValues);
+        this.donutGradient = this.buildDonutGradient(this.assetDistributionValues());
         this.donutFrame = undefined;
       }
     };
@@ -494,8 +496,13 @@ export class WorkspaceComponent implements OnDestroy {
     this.overviewOpenOrders = 0;
     this.overviewMonthlyCost = 0;
     this.overviewMaintenanceCost = 0;
-    const demo = this.isDemoUnit();
-    const targets = { assets: demo ? 10 : 0, preventive: demo ? 3 : 0, orders: demo ? 2 : 0, monthlyCost: demo ? 1280 : 0, maintenanceCost: demo ? 4860 : 0 };
+    const targets = {
+      assets: this.assets.length,
+      preventive: this.preventiveUpcomingCount(),
+      orders: this.openMaintenanceCount(),
+      monthlyCost: this.monthlyCostTotal(),
+      maintenanceCost: this.costs.reduce((sum, cost) => sum + cost.value, 0),
+    };
     const duration = 1100;
     const start = performance.now();
     const step = (now: number) => {
@@ -517,6 +524,87 @@ export class WorkspaceComponent implements OnDestroy {
   formatOverviewCurrency(value: number): string {
     return `R$ ${value.toLocaleString('pt-BR')}`;
   }
+
+  assetDistributionValues(): number[] {
+    return this.assetTypeOptions.slice(0, 4).map((option) => this.assets.filter((asset) => asset.type === option.label).length);
+  }
+
+  assetTypeCount(label: string): number {
+    return this.assets.filter((asset) => asset.type === label).length;
+  }
+  assetsInMaintenanceCount(): number {
+    return this.assets.filter((asset) => asset.status === 'Em manutenção').length;
+  }
+  assetsWithoutNextDateCount(): number {
+    return this.assets.filter((asset) => asset.next === 'Sem data').length;
+  }
+
+  preventiveUpcomingCount(): number {
+    return this.maintenance.filter((item) => item.type === 'Preventiva' && item.status !== 'Concluída').length;
+  }
+
+  openMaintenanceCount(): number {
+    return this.maintenance.filter((item) => item.status !== 'Concluída').length;
+  }
+
+  monthlyCostTotal(): number {
+    const now = new Date();
+    return this.costs
+      .filter((cost) => cost.date.getMonth() === now.getMonth() && cost.date.getFullYear() === now.getFullYear())
+      .reduce((sum, cost) => sum + cost.value, 0);
+  }
+
+  accumulatedCostTotal(): number {
+    return this.costs.reduce((sum, cost) => sum + cost.value, 0);
+  }
+
+  private loadPersistedData(): void {
+    const userId = this.auth.currentUser()?.id || 'anonymous';
+    this.persistenceKey = `navycare_workspace_${userId}_${this.activeUnitId}`;
+    const stored = localStorage.getItem(this.persistenceKey);
+    if (!stored) {
+      if (!this.isDemoUnit()) {
+        this.assets = [];
+        this.maintenance = [];
+        this.warranties = [];
+        this.suppliers = [];
+        this.costs = [];
+      }
+      this.persistData();
+      return;
+    }
+    try {
+      const data = JSON.parse(stored);
+      if (Array.isArray(data.assets)) this.assets = data.assets;
+      if (Array.isArray(data.maintenance)) this.maintenance = data.maintenance;
+      if (Array.isArray(data.warranties)) this.warranties = data.warranties.map((item: WarrantyItem) => ({ ...item, untilDate: new Date(item.untilDate) }));
+      if (Array.isArray(data.suppliers)) this.suppliers = data.suppliers;
+      if (Array.isArray(data.costs)) this.costs = data.costs.map((item: CostItem) => ({ ...item, date: new Date(item.date) }));
+      if (Array.isArray(data.notifications)) this.notifications = data.notifications;
+      if (Array.isArray(data.auditLog)) this.auditLog = data.auditLog;
+    } catch {
+      this.persistData();
+    }
+  }
+
+  private persistData(): void {
+    if (!this.persistenceKey) return;
+    localStorage.setItem(this.persistenceKey, JSON.stringify({
+      assets: this.assets,
+      maintenance: this.maintenance,
+      warranties: this.warranties,
+      suppliers: this.suppliers,
+      costs: this.costs,
+      notifications: this.notifications,
+      auditLog: this.auditLog,
+    }));
+  }
+
+  private recordAction(action: string, detail: string, icon: string): void {
+    this.auditLog.unshift({ action, detail, user: this.user.name, date: 'Agora', icon });
+    this.persistData();
+  }
+
   overviewCostChartPoints(): OverviewCostChartPoint[] {
     const start = new Date(2026, 4, 1).getTime();
     const end = new Date(2026, 8, 30, 23, 59, 59).getTime();
@@ -659,6 +747,9 @@ export class WorkspaceComponent implements OnDestroy {
   selectUnit(unit: UnitProfile): void {
     this.auth.setActiveUnit(unit.id);
     this.activeUnitId = unit.id;
+    this.loadPersistedData();
+    this.playOverviewNumbers();
+    this.playDonutIntro();
     this.unitMenuOpen = false;
     this.router.navigate(['/app/visao-geral'], { queryParams: { unit: unit.id } });
   }
@@ -707,6 +798,32 @@ export class WorkspaceComponent implements OnDestroy {
       return matchesQuery && matchesPeriod && matchesCategory;
     });
   }
+  deleteAsset(asset: Asset): void {
+    if (!window.confirm(`Tem certeza que deseja excluir o ativo "${asset.name}"?`)) return;
+    this.assets = this.assets.filter((item) => item !== asset);
+    this.maintenance = this.maintenance.filter((item) => !item.asset.includes(asset.code));
+    this.warranties = this.warranties.filter((item) => item.assetCode !== asset.code);
+    this.recordAction('Ativo excluído', `${asset.name} (${asset.code}) foi removido do patrimônio.`, 'delete');
+  }
+
+  deleteMaintenance(item: MaintenanceItem): void {
+    if (!window.confirm(`Tem certeza que deseja excluir a ordem "${item.title}"?`)) return;
+    this.maintenance = this.maintenance.filter((entry) => entry !== item);
+    this.recordAction('Ordem de serviço excluída', `${item.title} foi removida da manutenção.`, 'delete');
+  }
+
+  deleteWarranty(item: WarrantyItem): void {
+    if (!window.confirm(`Tem certeza que deseja excluir a garantia de "${item.assetName}"?`)) return;
+    this.warranties = this.warranties.filter((entry) => entry !== item);
+    this.recordAction('Garantia excluída', `A garantia de ${item.assetName} foi removida.`, 'delete');
+  }
+
+  deleteCost(item: CostItem): void {
+    if (!window.confirm(`Tem certeza que deseja excluir o custo "${item.description}"?`)) return;
+    this.costs = this.costs.filter((entry) => entry !== item);
+    this.recordAction('Custo excluído', `${item.description} foi removido dos lançamentos.`, 'delete');
+  }
+
   filteredNotifications(): NotificationItem[] {
     return this.notifications.filter((item) => this.notificationFilter === 'Todas' || !item.read);
   }
@@ -884,6 +1001,7 @@ export class WorkspaceComponent implements OnDestroy {
       icon: option?.icon || 'category',
     });
 
+    this.recordAction('Ativo cadastrado', `${this.assets[0].name} (${code}) foi adicionado ao patrimônio.`, 'inventory_2');
     this.closeDrawer();
   }
 
@@ -920,6 +1038,7 @@ export class WorkspaceComponent implements OnDestroy {
       status: this.newMaintenance.status,
     });
 
+    this.recordAction('Ordem de serviço criada', `${this.newMaintenance.title.trim()} foi cadastrada para ${asset.name}.`, 'assignment');
     this.closeDrawer();
   }
 
@@ -997,6 +1116,7 @@ export class WorkspaceComponent implements OnDestroy {
       coverage: this.newWarranty.coverage.trim(),
     });
 
+    this.recordAction('Garantia cadastrada', `Garantia de ${asset.name} registrada até ${this.formatDate(until)}.`, 'verified_user');
     this.closeDrawer();
   }
 
@@ -1046,6 +1166,7 @@ export class WorkspaceComponent implements OnDestroy {
       history: '00 OS',
     });
 
+    this.recordAction('Fornecedor cadastrado', `${this.newSupplier.name.trim()} foi adicionado à operação.`, 'groups');
     this.closeDrawer();
   }
 
@@ -1084,6 +1205,7 @@ export class WorkspaceComponent implements OnDestroy {
       value: Number(this.newCost.value),
     });
 
+    this.recordAction('Custo lançado', `${this.formatCurrency(Number(this.newCost.value))} registrado em ${this.newCost.description.trim()}.`, 'payments');
     this.closeDrawer();
   }
 
